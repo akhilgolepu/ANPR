@@ -13,7 +13,7 @@ import {
   Video as VideoIcon,
   FileUp,
 } from 'lucide-react';
-import { uploadImages, uploadVideo, ANPRResult } from '@/lib/anpr-api';
+import { uploadImages, uploadVideo, getJobResults, ANPRResult } from '@/lib/anpr-api';
 import ANPRResults from './ANPRResults';
 
 interface PipelineDemoProps {
@@ -32,6 +32,22 @@ export default function PipelineDemo({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [results, setResults] = useState<ANPRResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [processingStage, setProcessingStage] = useState<string | null>(null);
+
+  const waitForCompletion = useCallback(async (initial: ANPRResult) => {
+    let latest = initial;
+    setProcessingStage(initial.stage ?? 'Queued');
+    setUploadProgress(Math.max(initial.progress ?? 5, 5));
+
+    while (latest.status === 'processing') {
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      latest = await getJobResults(initial.job_id);
+      setProcessingStage(latest.stage ?? 'Processing');
+      setUploadProgress(Math.max(latest.progress ?? 5, 5));
+    }
+
+    return latest;
+  }, []);
 
   // Handle file selection
   const handleFileSelect = useCallback(async (files: File[]) => {
@@ -40,6 +56,9 @@ export default function PipelineDemo({
     setSelectedFiles(files);
     setUploadProgress(0);
     onProcessingStart?.();
+    setProcessingStage(null);
+
+    let progressInterval: ReturnType<typeof setInterval> | null = null;
 
     try {
       // Validate files
@@ -59,7 +78,7 @@ export default function PipelineDemo({
       const imageFiles = files.filter(f => f.type.startsWith('image/'));
 
       // Simulate progress
-      const progressInterval = setInterval(() => {
+      progressInterval = setInterval(() => {
         setUploadProgress(prev => Math.min(prev + Math.random() * 20, 95));
       }, 200);
 
@@ -73,21 +92,36 @@ export default function PipelineDemo({
         throw new Error('No valid image or video files selected');
       }
 
-      clearInterval(progressInterval);
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
+
+      if (result.status === 'processing') {
+        result = await waitForCompletion(result);
+      }
+
+      if (result.status === 'error') {
+        throw new Error(result.error || 'Processing failed on the server');
+      }
+
       setUploadProgress(100);
+      setProcessingStage(result.stage ?? 'Completed');
       await new Promise(resolve => setTimeout(resolve, 500));
 
       setResults(result);
       setMode('completed');
       onProcessingEnd?.(result);
     } catch (err) {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
       setError(err instanceof Error ? err.message : 'An error occurred');
       setMode('error');
     }
-  }, [onProcessingStart, onProcessingEnd]);
+  }, [onProcessingStart, onProcessingEnd, waitForCompletion]);
 
   // Handle drag and drop
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setMode('dragging');
   }, []);
@@ -97,7 +131,7 @@ export default function PipelineDemo({
   }, []);
 
   const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
+    (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
       const files = Array.from(e.dataTransfer.files);
       if (files.length > 0) {
@@ -126,6 +160,7 @@ export default function PipelineDemo({
     setResults(null);
     setError(null);
     setUploadProgress(0);
+    setProcessingStage(null);
   }, []);
 
   // Show results
@@ -216,7 +251,6 @@ export default function PipelineDemo({
               {mode === 'idle' && (
                 <Button
                   className="w-full glow-orange"
-                  disabled={mode === 'uploading'}
                   onClick={() => {
                     const input = document.getElementById(
                       'file-input'
@@ -265,9 +299,14 @@ export default function PipelineDemo({
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                    <p className="text-sm font-medium text-foreground">
-                      Processing {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''}...
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-foreground">
+                        Processing {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''}...
+                      </p>
+                      {processingStage && (
+                        <p className="text-xs text-muted-foreground mt-1">{processingStage}</p>
+                      )}
+                    </div>
                   </div>
                   <Progress value={uploadProgress} className="h-2" />
                   <p className="text-xs text-muted-foreground text-right">

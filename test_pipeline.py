@@ -19,6 +19,8 @@ from PIL import Image as PILImage
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "backend"))
 
+from processor import postprocess_indian_plate  # zone-based Indian plate parser
+
 # ── Directories ───────────────────────────────────────────────────────────────
 TEST_DIR    = PROJECT_ROOT / "test_images"
 OUT_DIR     = PROJECT_ROOT / "outputs" / "test_results"
@@ -55,11 +57,11 @@ def load_trocr():
     TROCR_CACHE.mkdir(parents=True, exist_ok=True)
     if (TROCR_CACHE / "config.json").exists():
         print(f"  [TrOCR] Loading from local cache: {TROCR_CACHE}")
-        proc  = TrOCRProcessor.from_pretrained(str(TROCR_CACHE))
+        proc  = TrOCRProcessor.from_pretrained(str(TROCR_CACHE), use_fast=True)
         model = VisionEncoderDecoderModel.from_pretrained(str(TROCR_CACHE))
     else:
         print(f"  [TrOCR] First run — downloading {MODEL_ID} …")
-        proc  = TrOCRProcessor.from_pretrained(MODEL_ID)
+        proc  = TrOCRProcessor.from_pretrained(MODEL_ID, use_fast=True)
         model = VisionEncoderDecoderModel.from_pretrained(MODEL_ID)
         proc.save_pretrained(str(TROCR_CACHE))
         model.save_pretrained(str(TROCR_CACHE))
@@ -80,33 +82,78 @@ def preprocess(img_bgr: np.ndarray) -> np.ndarray:
     return cleaned
 
 
+# ── Preprocessing helpers ─────────────────────────────────────────────────────
+_TARGET_H        = 128
+_PAD             = 12
+_FALLBACK_THRESH = 0.75
+
+
+def _prepare_crop(gray: np.ndarray) -> np.ndarray:
+    """Upscale → sharpen → white-pad a grayscale crop for TrOCR."""
+    h, w = gray.shape
+    scale = _TARGET_H / max(h, 1)
+    if scale > 1.0:
+        gray = cv2.resize(gray, (max(1, int(w * scale)), _TARGET_H),
+                          interpolation=cv2.INTER_CUBIC)
+    # Unsharp mask
+    blur = cv2.GaussianBlur(gray, (0, 0), sigmaX=2)
+    gray = cv2.addWeighted(gray, 1.5, blur, -0.5, 0)
+    # White border padding
+    gray = cv2.copyMakeBorder(gray, _PAD, _PAD, _PAD, _PAD,
+                               cv2.BORDER_CONSTANT, value=255)
+    return gray
+
+
+def _clahe_variant(gray: np.ndarray) -> np.ndarray:
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    return _prepare_crop(cv2.bilateralFilter(clahe.apply(gray), 11, 17, 17))
+
+
+def _otsu_variant(gray: np.ndarray) -> np.ndarray:
+    _, b = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    return _prepare_crop(b)
+
+
+def _adaptive_variant(gray: np.ndarray) -> np.ndarray:
+    a = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                               cv2.THRESH_BINARY, 15, 4)
+    return _prepare_crop(a)
+
+
 # ── TrOCR inference ───────────────────────────────────────────────────────────
-def trocr_recognize(proc, model, device, crop_bgr: np.ndarray):
+def _run_once(proc, model, device, processed):
     import torch
-    cleaned   = preprocess(crop_bgr)
-    pil_img   = PILImage.fromarray(cleaned).convert("RGB")
-    pv        = proc(images=pil_img, return_tensors="pt").pixel_values.to(device)
-
+    pv = proc(images=PILImage.fromarray(processed).convert("RGB"),
+              return_tensors="pt").pixel_values.to(device)
     with torch.no_grad():
-        outputs = model.generate(
-            pv,
-            num_beams=4,
-            max_new_tokens=32,
-            return_dict_in_generate=True,
-            output_scores=True,
-        )
+        outputs = model.generate(pv, num_beams=5, max_new_tokens=32,
+                                  return_dict_in_generate=True, output_scores=True)
+    raw  = proc.batch_decode(outputs.sequences, skip_special_tokens=True)[0]
+    conf = 0.75
+    if getattr(outputs, "sequences_scores", None) is not None:
+        score = outputs.sequences_scores[0].item()
+        conf  = float(min(1.0, math.exp(max(-10.0, score))))
+    return raw, conf
 
-    raw_text   = proc.batch_decode(outputs.sequences, skip_special_tokens=True)[0]
-    clean_text = re.sub(r"[^A-Za-z0-9]", "", raw_text).upper()
 
-    seq_scores = getattr(outputs, "sequences_scores", None)
-    if seq_scores is not None:
-        score      = seq_scores[0].item()
-        confidence = float(min(1.0, math.exp(max(-10.0, score))))
-    else:
-        confidence = 0.75
+def trocr_recognize(proc, model, device, crop_bgr: np.ndarray):
+    gray = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2GRAY) if crop_bgr.ndim == 3 else crop_bgr
 
-    return clean_text, confidence, raw_text
+    # Primary pass
+    raw, conf = _run_once(proc, model, device, _clahe_variant(gray))
+    best_raw, best_conf = raw, conf
+
+    # Fallback variants only when primary is uncertain
+    if conf < _FALLBACK_THRESH:
+        for fn in (_otsu_variant, _adaptive_variant):
+            r, c = _run_once(proc, model, device, fn(gray))
+            if c > best_conf:
+                best_raw, best_conf = r, c
+            if best_conf >= _FALLBACK_THRESH:
+                break
+
+    clean_text = postprocess_indian_plate(best_raw)
+    return clean_text, best_conf, best_raw
 
 
 # ── Confidence label helper ───────────────────────────────────────────────────

@@ -30,7 +30,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-sm uppercase tracking-widest-xl text-primary mb-6"
           >
-            YOLOv8 + EasyOCR Deep Learning Pipeline
+            YOLOv8 + TrOCR Deep Learning Pipeline
           </motion.p>
 
           <motion.h1
@@ -53,7 +53,7 @@ const HeroSection = () => {
             className="text-lg text-muted-foreground max-w-xl mb-10"
           >
             Intelligent Vehicle Monitoring and Theft Detection powered by
-            YOLOv8 and EasyOCR.
+            YOLOv8 and TrOCR (microsoft/trocr-base-printed).
           </motion.p>
 
           <motion.div
@@ -90,8 +90,8 @@ const HeroSection = () => {
           className="absolute bottom-12 right-6 md:right-12 flex flex-col gap-3"
         >
           <StatCard value="99.48%" label="Detection mAP" delay={0.9} />
-          <StatCard value="~10.5s" label="Processing Time" delay={1.0} />
-          <StatCard value="95.5%" label="OCR Accuracy" delay={1.1} />
+          <StatCard value="~3.4s" label="Per Image" delay={1.0} />
+          <StatCard value="~84%" label="TrOCR Confidence" delay={1.1} />
         </motion.div>
       </div>
     </section>

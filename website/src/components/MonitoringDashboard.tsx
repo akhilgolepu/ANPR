@@ -150,14 +150,14 @@ const MonitoringDashboard = () => {
       icon: TrendingUp,
       label: 'OCR Engine',
       value: 'TrOCR',
-      description: 'microsoft/trocr-base-printed · avg 95.5% conf',
+      description: 'microsoft/trocr-base-printed · avg 84% conf',
       color: 'text-green-500',
     },
     {
       icon: Zap,
       label: 'Processing Speed',
-      value: '~10.5s',
-      description: 'Per image on CPU (TrOCR)',
+      value: '~3.4s',
+      description: 'Per image (TrOCR)',
       color: 'text-orange-500',
     },
     {

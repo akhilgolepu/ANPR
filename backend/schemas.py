@@ -7,6 +7,25 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, EmailStr, field_validator
 
 
+# ============================================================================
+# Shared Types
+# ============================================================================
+
+VehicleStatus = Literal["Clear", "Stolen/Missing", "Recovered"]
+VehicleType   = Literal["Car", "Bike", "Truck", "Bus", "Auto", "Other"]
+
+
+class VehicleMatchSummary(BaseModel):
+    plate_number: str
+    status: VehicleStatus
+    vehicle_make: str
+    vehicle_model: str
+    owner_name: str
+    registered_rto_state: str
+    registered_rto_code: str
+    police_complaint_id: Optional[str] = None
+
+
 class PlateDetection(BaseModel):
     plate_text: str
     confidence: float
@@ -15,6 +34,17 @@ class PlateDetection(BaseModel):
     plate_crop_url: str
     raw_ocr_text: Optional[str] = None  # Raw TrOCR output before cleaning
     ocr_engine: str = "trocr"
+    top_ocr_candidates: List[str] = []
+    format_score: float = 0.0
+    review_required: bool = False
+    registry_match: Optional[VehicleMatchSummary] = None
+    human_corrected_text: Optional[str] = None
+    human_verified: bool = False
+    seen_count: int = 1
+    first_seen_sec: Optional[float] = None
+    last_seen_sec: Optional[float] = None
+    source_frame: Optional[int] = None
+    source_file_name: Optional[str] = None
 
 
 class ANPRResult(BaseModel):
@@ -26,14 +56,15 @@ class ANPRResult(BaseModel):
     detections: List[PlateDetection]
     output_file_url: Optional[str] = None
     error: Optional[str] = None
+    progress: float = 100.0
+    stage: Optional[str] = None
+    alert_count: int = 0
+    review_count: int = 0
 
 
 # ============================================================================
 # Vehicle Registry Schemas
 # ============================================================================
-
-VehicleStatus = Literal["Clear", "Stolen/Missing", "Recovered"]
-VehicleType   = Literal["Car", "Bike", "Truck", "Bus", "Auto", "Other"]
 
 
 class VehicleRecord(BaseModel):
@@ -126,3 +157,20 @@ class ActionResponse(BaseModel):
     success: bool
     message: str
     vehicle: Optional[VehicleRecord] = None
+
+
+class DetectionCorrectionRequest(BaseModel):
+    corrected_text: str
+
+    @field_validator("corrected_text")
+    @classmethod
+    def normalise_plate(cls, v: str) -> str:
+        import re
+        return re.sub(r"[^A-Za-z0-9]", "", v).upper()
+
+
+class BulkImportResponse(BaseModel):
+    success: bool
+    imported: int
+    updated: int
+    errors: List[str] = []

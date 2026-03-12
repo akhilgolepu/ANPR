@@ -1,61 +1,64 @@
 # ANPR System - Quick Reference
 
-## 🚀 Quick Start (30 seconds)
+## 🚀 Quick Start
 
-### Option A: Full Automated Start
+### Terminal 1 — Backend
+
 ```bash
-cd /home/akhil/3-2
-bash start-anpr.sh
-```
-
-Then open: **http://localhost:5173**
-
-### Option B: Manual Start (2 Terminals)
-
-**Terminal 1 - Backend:**
-```bash
-cd /home/akhil/3-2/backend
-conda run -n ml_workspace python main.py
+cd backend
+python -m uvicorn main:app --host localhost --port 8000
 # ✓ Runs on http://localhost:8000
 ```
 
-**Terminal 2 - Frontend:**
+### Terminal 2 — Frontend
+
 ```bash
-cd /home/akhil/3-2/website
+cd website
+npm install
 npm run dev
-# ✓ Opens http://localhost:5173
+# ✓ Opens http://localhost:8080
+```
+
+### Test Pipeline
+
+```bash
+python test_pipeline.py
+# Annotated results → outputs/test_results/
 ```
 
 ---
 
 ## 📋 What's Included
 
-| Component | Status | Location |
-|-----------|--------|----------|
-| **Backend API** | ✅ Ready | `/backend/main.py` |
-| **YOLO Detection** | ✅ 99.48% mAP | `/runs/plate_detection/` |
-| **TrOCR Engine** | ✅ Active | Integrated in backend |
-| **React Frontend** | ✅ Ready | `/website/src/` |
-| **Database** | ⏸️ Optional | Use S3/local storage |
-| **Docker** | 📝 See docs | `IMPLEMENTATION_COMPLETE.md` |
+| Component          | Status        | Location                     |
+| ------------------ | ------------- | ---------------------------- |
+| **Backend API**    | ✅ Ready      | `/backend/main.py`           |
+| **YOLO Detection** | ✅ 99.48% mAP | `/runs/plate_detection/`     |
+| **TrOCR Engine**   | ✅ Active     | Integrated in backend        |
+| **React Frontend** | ✅ Ready      | `/website/src/`              |
+| **Database**       | ⏸️ Optional   | Use S3/local storage         |
+| **Docker**         | 📝 See docs   | `IMPLEMENTATION_COMPLETE.md` |
 
 ---
 
 ## 🎯 Main Features
 
-### Upload 
+### Upload
+
 - 🖼️ Single/multiple images (JPG, PNG, WebP)
 - 🎬 Video files (MP4, WebM)
 - Drag-and-drop interface
 - Real-time progress
 
 ### Process
+
 - 🔍 Detect license plates with YOLOv8s (99.48%)
 - 📝 Recognize plate text with **TrOCR** (microsoft/trocr-base-printed)
 - ✨ Phase 2 preprocessing: CLAHE + bilateral denoising
 - 📊 Confidence scores & bounding boxes
 
 ### Export
+
 - 💾 JSON (full data) + CSV (summary)
 - 🖼️ Download crop images
 - 🎬 Download annotated video
@@ -89,15 +92,15 @@ open http://localhost:8000/api/docs
 
 ## 🐛 Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| Port 8000 in use | `lsof -i :8000` → `kill -9 PID` |
-| Port 5173 in use | Change in `website/vite.config.ts` |
+| Issue            | Fix                                         |
+| ---------------- | ------------------------------------------- |
+| Port 8000 in use | `lsof -i :8000` → `kill -9 PID`             |
+| Port 5173 in use | Change in `website/vite.config.ts`          |
 | Models not found | Check: `/runs/plate_detection/yolov8s_640/` |
-| npm not found | Install Node.js 16+ |
-| conda not found | Install Miniconda or Anaconda |
-| GPU memory error | Set `gpu=False` in `processor.py` |
-| CORS error | Check backend CORS config in `main.py` |
+| npm not found    | Install Node.js 16+                         |
+| conda not found  | Install Miniconda or Anaconda               |
+| GPU memory error | Set `gpu=False` in `processor.py`           |
+| CORS error       | Check backend CORS config in `main.py`      |
 
 ---
 
@@ -124,13 +127,13 @@ open http://localhost:8000/api/docs
 
 ## 📊 Performance
 
-| Metric | Value |
-|--------|-------|
+| Metric             | Value      |
+| ------------------ | ---------- |
 | Detection Accuracy | 99.48% mAP |
-| OCR Accuracy | 22.0% |
-| Speed (Image) | ~0.3s |
-| Speed (Video) | ~15 FPS |
-| Memory | 2-3 GB |
+| OCR Accuracy       | 22.0%      |
+| Speed (Image)      | ~0.3s      |
+| Speed (Video)      | ~15 FPS    |
+| Memory             | 2-3 GB     |
 
 ---
 

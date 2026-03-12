@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+node_modules/
+website/node_modules/
+website/dist/
+
+# Runtime outputs (generated per-run, not source)
+outputs/
+reports/
+
+# Model weights & large binaries (download separately)
+*.pt
+*.zip
+*.safetensors
+*.onnx
+models/
+runs/
+
+# Video & media
+*.mp4
+*.avi
+*.mov
+
+# Logs & temp
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

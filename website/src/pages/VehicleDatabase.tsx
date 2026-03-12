@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Shield, ArrowLeft, Plus, Search, Edit2, Trash2,
-  AlertTriangle, CheckCircle2, Car, RefreshCw,
+  AlertTriangle, CheckCircle2, Car, RefreshCw, Download, Upload,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import {
   fileComplaint, markRecovered,
   VehicleRecord, VehicleCreate, VehicleUpdate,
   ComplaintRequest, RecoveryRequest, VehicleType,
+  exportVehiclesCsv, importVehiclesCsv,
 } from "@/lib/vehicles-api";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
@@ -159,6 +160,10 @@ export default function VehicleDatabase() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [vehicleTypeFilter, setVehicleTypeFilter] = useState("All");
+  const [stateCodeFilter, setStateCodeFilter] = useState("");
+
+  const [globalCounts, setGlobalCounts] = useState({ total: 0, clear: 0, stolen: 0, recovered: 0 });
 
   // modal state machine
   type ModalKind = "none" | "add" | "edit" | "complaint" | "recover" | "delete";
@@ -181,17 +186,56 @@ export default function VehicleDatabase() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await listVehicles({
-        status: statusFilter === "All" ? "" : statusFilter,
-        search,
-      });
+      const [data, allData] = await Promise.all([
+        listVehicles({
+          status: statusFilter === "All" ? "" : statusFilter,
+          search,
+          vehicleType: vehicleTypeFilter === "All" ? "" : vehicleTypeFilter,
+          stateCode: stateCodeFilter,
+        }),
+        listVehicles({}),
+      ]);
       setVehicles(data);
+      setGlobalCounts({
+        total: allData.length,
+        clear: allData.filter((v) => v.status === "Clear").length,
+        stolen: allData.filter((v) => v.status === "Stolen/Missing").length,
+        recovered: allData.filter((v) => v.status === "Recovered").length,
+      });
     } catch (e: unknown) {
       toast({ title: "Error loading vehicles", description: String(e), variant: "destructive" });
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, toast]);
+  }, [search, statusFilter, vehicleTypeFilter, stateCodeFilter, toast]);
+
+  const handleExport = async () => {
+    try {
+      await exportVehiclesCsv({
+        status: statusFilter === "All" ? "" : statusFilter,
+        search,
+        vehicleType: vehicleTypeFilter === "All" ? "" : vehicleTypeFilter,
+        stateCode: stateCodeFilter,
+      });
+      toast({ title: "Registry exported" });
+    } catch (e: unknown) {
+      toast({ title: "Export failed", description: String(e), variant: "destructive" });
+    }
+  };
+
+  const handleImport = async (file: File) => {
+    try {
+      const result = await importVehiclesCsv(file);
+      toast({
+        title: "Registry import complete",
+        description: `Imported ${result.imported}, updated ${result.updated}${result.errors.length ? `, ${result.errors.length} error(s)` : ""}`,
+        variant: result.errors.length ? "destructive" : "default",
+      });
+      load();
+    } catch (e: unknown) {
+      toast({ title: "Import failed", description: String(e), variant: "destructive" });
+    }
+  };
 
   useEffect(() => { load(); }, [load]);
 
@@ -327,13 +371,8 @@ export default function VehicleDatabase() {
   };
 
   // ── counts ───────────────────────────────────────────────────────────────────
-
-  const counts = {
-    total: vehicles.length,
-    clear: vehicles.filter((v) => v.status === "Clear").length,
-    stolen: vehicles.filter((v) => v.status === "Stolen/Missing").length,
-    recovered: vehicles.filter((v) => v.status === "Recovered").length,
-  };
+  // globalCounts always reflects the full registry (regardless of active filters)
+  const counts = globalCounts;
 
   // ── render ───────────────────────────────────────────────────────────────────
 
@@ -356,6 +395,27 @@ export default function VehicleDatabase() {
             className="gap-1 text-xs">
             <Plus className="h-3.5 w-3.5" /> Add Vehicle
           </Button>
+          <div className="flex items-center gap-2">
+            <input
+              id="registry-import-input"
+              type="file"
+              accept=".csv"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.currentTarget.files?.[0];
+                if (file) {
+                  handleImport(file);
+                  e.currentTarget.value = "";
+                }
+              }}
+            />
+            <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={handleExport}>
+              <Download className="h-3.5 w-3.5" /> Export CSV
+            </Button>
+            <Button size="sm" variant="outline" className="gap-1 text-xs" onClick={() => document.getElementById("registry-import-input")?.click()}>
+              <Upload className="h-3.5 w-3.5" /> Import CSV
+            </Button>
+          </div>
         </div>
       </nav>
 
@@ -397,6 +457,22 @@ export default function VehicleDatabase() {
               ))}
             </SelectContent>
           </Select>
+          <Select value={vehicleTypeFilter} onValueChange={setVehicleTypeFilter}>
+            <SelectTrigger className="w-40 bg-background">
+              <SelectValue placeholder="Vehicle Type" />
+            </SelectTrigger>
+            <SelectContent>
+              {["All", ...VEHICLE_TYPES].map((t) => (
+                <SelectItem key={t} value={t}>{t}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            placeholder="State code e.g. TS"
+            value={stateCodeFilter}
+            onChange={(e) => setStateCodeFilter(e.target.value.toUpperCase())}
+            className="w-40 bg-background"
+          />
           <Button variant="outline" size="icon" onClick={load} title="Refresh">
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>

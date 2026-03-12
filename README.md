@@ -1,12 +1,53 @@
 # ANPR System - Automatic Number Plate Recognition
 
-Intelligent ANPR system for Indian license plates with vehicle detection, plate detection, and OCR.
+Intelligent ANPR system for Indian license plates using **YOLOv8** for plate detection and **TrOCR** (`microsoft/trocr-base-printed`) for text recognition.
 
-## Documentation
+## Pipeline
 
-- **[README_PROCESS.md](README_PROCESS.md)** - Complete workflow guide (detection → cropping → OCR)
-- **[README_DATASET.md](README_DATASET.md)** - Dataset preparation and splitting guide
-- **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Detailed project structure
+1. **YOLOv8s** — detects license plate bounding boxes (99.48% mAP)
+2. **Phase-2 preprocessing** — CLAHE contrast enhancement + bilateral denoising
+3. **TrOCR** — Transformer-based OCR reads the plate text (~95.5% avg confidence)
+4. **Indian plate postprocessing** — state-code anchoring, zone-aware OCR-confusion fixes
+5. **FastAPI backend + React frontend** — full web interface with vehicle registry
+
+## Quick Start
+
+### Backend
+
+```bash
+pip install -r backend/requirements.txt
+cd backend
+python -m uvicorn main:app --host localhost --port 8000
+```
+
+### Frontend
+
+```bash
+cd website
+npm install
+npm run dev
+# Opens at http://localhost:8080
+```
+
+### Test Pipeline (test_images/)
+
+```bash
+python test_pipeline.py
+# Annotated results → outputs/test_results/
+```
+
+## Dependencies
+
+| Package                  | Purpose                 |
+| ------------------------ | ----------------------- |
+| `fastapi` + `uvicorn`    | Backend API server      |
+| `ultralytics`            | YOLOv8 plate detection  |
+| `transformers` + `torch` | TrOCR recognition       |
+| `opencv-python`          | Image/video processing  |
+| `Pillow`                 | Image format conversion |
+| `python-multipart`       | File upload support     |
+
+Frontend: React + Vite + Tailwind + shadcn/ui
 
 ## Project Structure
 
@@ -60,6 +101,7 @@ python scripts/prepare_dataset.py
 ```
 
 This creates:
+
 - **Vehicle Detection**: `datasets/processed/vehicle_detection/` (YOLO format)
 - **Plate Detection**: `datasets/processed/plate_detection/` (YOLO format, 80/10/10 split)
 - **OCR Dataset**: `datasets/processed/ocr_dataset/` (plate crops + labels)
@@ -89,6 +131,7 @@ See [README_PROCESS.md](README_PROCESS.md) for detailed workflow.
 ## Models
 
 ### Model 1: License Plate Detection (YOLOv8-s)
+
 - **Input**: 640×640 images
 - **Output**: Bounding boxes for license plates
 - **Classes**: `license_plate` (1 class)
@@ -96,6 +139,7 @@ See [README_PROCESS.md](README_PROCESS.md) for detailed workflow.
 - **Metrics**: mAP@0.5, Precision, Recall
 
 ### Model 2: License Plate Recognition (TrOCR)
+
 - **Engine**: `microsoft/trocr-base-printed` – ViT encoder + autoregressive decoder
 - **Preprocessing**: CLAHE contrast enhancement + bilateral denoising (Phase 2 pipeline)
 - **Confidence**: Derived from beam-search sequence probability
@@ -103,18 +147,21 @@ See [README_PROCESS.md](README_PROCESS.md) for detailed workflow.
 - **Output**: Plate text (A-Z, 0-9), position-corrected for Indian format
 
 ### Model 3: Vehicle Detection (Pretrained YOLO)
+
 - Uses COCO-pretrained YOLO
 - Classes: car, bus, tempo, vehicle_truck, two_wheelers
 
 ## Dataset Statistics
 
 **Plate Detection Dataset** (after adding dataset-3 crops):
+
 - Train: ~3,841 images
-- Val: ~480 images  
+- Val: ~480 images
 - Test: ~481 images
 - Total: ~4,802 images
 
 **Vehicle Detection Dataset**:
+
 - Train: ~62 images
 - Val: ~7 images
 - Test: ~9 images
@@ -134,6 +181,7 @@ See `requirements.txt` for full list.
 ## OCR Engine
 
 **License Plate Recognition (TrOCR – `microsoft/trocr-base-printed`)**:
+
 - Transformer-based architecture: ViT image encoder + autoregressive text decoder
 - Phase 2 preprocessing: CLAHE contrast enhancement + bilateral denoising
 - Confidence derived from beam-search sequence scores (4 beams)

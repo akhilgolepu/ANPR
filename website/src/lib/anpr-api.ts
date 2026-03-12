@@ -3,6 +3,17 @@
  * Handles communication with the FastAPI backend
  */
 
+export interface VehicleMatchSummary {
+  plate_number: string;
+  status: 'Clear' | 'Stolen/Missing' | 'Recovered';
+  vehicle_make: string;
+  vehicle_model: string;
+  owner_name: string;
+  registered_rto_state: string;
+  registered_rto_code: string;
+  police_complaint_id?: string | null;
+}
+
 export interface PlateDetection {
   plate_text: string;
   confidence: number;
@@ -11,6 +22,17 @@ export interface PlateDetection {
   plate_crop_url: string;
   raw_ocr_text?: string;  // Raw TrOCR output before cleaning
   ocr_engine?: string;    // e.g. "trocr"
+  top_ocr_candidates?: string[];
+  format_score?: number;
+  review_required?: boolean;
+  registry_match?: VehicleMatchSummary | null;
+  human_corrected_text?: string | null;
+  human_verified?: boolean;
+  seen_count?: number;
+  first_seen_sec?: number | null;
+  last_seen_sec?: number | null;
+  source_frame?: number | null;
+  source_file_name?: string | null;
 }
 
 export interface ANPRResult {
@@ -22,6 +44,10 @@ export interface ANPRResult {
   detections: PlateDetection[];
   output_file_url?: string;
   error?: string;
+  progress?: number;
+  stage?: string | null;
+  alert_count?: number;
+  review_count?: number;
 }
 
 const _apiHost = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:8000';
@@ -88,6 +114,20 @@ export async function getJobResults(jobId: string): Promise<ANPRResult> {
   return response.json();
 }
 
+export async function correctDetection(jobId: string, detectionIndex: number, correctedText: string): Promise<ANPRResult> {
+  const response = await fetch(`${API_BASE}/results/${jobId}/detections/${detectionIndex}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ corrected_text: correctedText }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to save correction: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
 /**
  * Export results as JSON
  */
@@ -108,9 +148,9 @@ export function exportResultsAsJSON(results: ANPRResult, filename?: string) {
  * Export results as CSV
  */
 export function exportResultsAsCSV(results: ANPRResult, filename?: string) {
-  let csv = 'Detection #,License Plate,Confidence,Bbox (x1, y1, x2, y2)\n';
+  let csv = 'Detection #,License Plate,Corrected Plate,Confidence,Format Score,Registry Status,Bbox (x1, y1, x2, y2)\n';
   results.detections.forEach((det, idx) => {
-    csv += `${idx + 1},"${det.plate_text}",${(det.confidence * 100).toFixed(1)}%,"${det.bbox.join(', ')}"\n`;
+    csv += `${idx + 1},"${det.plate_text}","${det.human_corrected_text ?? ''}",${(det.confidence * 100).toFixed(1)}%,${((det.format_score ?? 0) * 100).toFixed(1)}%,"${det.registry_match?.status ?? 'Unmatched'}","${det.bbox.join(', ')}"\n`;
   });
 
   const blob = new Blob([csv], { type: 'text/csv' });

@@ -3,21 +3,26 @@ ANPR FastAPI Backend
 Handles image/video uploads, plate detection, and OCR recognition
 """
 
+import csv
+import io
+import json
 import os
+import re
 import sys
 import uuid
 from pathlib import Path
 from typing import List
 
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import BackgroundTasks, FastAPI, File, UploadFile, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 from schemas import (
     ANPRResult, PlateDetection,
     VehicleRecord, VehicleCreate, VehicleUpdate,
     ComplaintRequest, RecoveryRequest, ActionResponse,
+    VehicleMatchSummary, DetectionCorrectionRequest, BulkImportResponse,
 )
 from processor import ProcessorService
 
@@ -71,6 +76,152 @@ try:
 except Exception as e:
     print(f"✗ Error initializing ProcessorService: {e}")
     processor = None
+
+
+_jobs: dict[str, dict] = {}
+
+
+def _normalise_plate(text: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]", "", text).upper()
+
+
+def _vehicle_match(record: VehicleRecord) -> VehicleMatchSummary:
+    return VehicleMatchSummary(
+        plate_number=record.plate_number,
+        status=record.status,
+        vehicle_make=record.vehicle_make,
+        vehicle_model=record.vehicle_model,
+        owner_name=record.owner_name,
+        registered_rto_state=record.registered_rto_state,
+        registered_rto_code=record.registered_rto_code,
+        police_complaint_id=record.police_complaint_id,
+    )
+
+
+def _write_result(result: ANPRResult) -> None:
+    result_file = RESULTS_DIR / f"{result.job_id}.json"
+    with open(result_file, "w", encoding="utf-8") as f:
+        json.dump(result.model_dump(mode="json"), f, indent=2)
+
+
+def _read_result(job_id: str) -> ANPRResult | None:
+    result_file = RESULTS_DIR / f"{job_id}.json"
+    if not result_file.exists():
+        return None
+    with open(result_file, encoding="utf-8") as f:
+        return _enrich_result(ANPRResult(**json.load(f)))
+
+
+def _set_job(job_id: str, **updates) -> None:
+    job = _jobs.setdefault(job_id, {
+        "job_id": job_id,
+        "status": "processing",
+        "input_type": "video",
+        "total_detections": 0,
+        "processing_time": 0.0,
+        "detections": [],
+        "progress": 0.0,
+        "stage": "Queued",
+        "alert_count": 0,
+        "review_count": 0,
+        "error": None,
+        "output_file_url": None,
+    })
+    job.update(updates)
+
+
+def _job_result(job_id: str) -> ANPRResult:
+    job = _jobs[job_id]
+    return ANPRResult(**job)
+
+
+def _enrich_result(result: ANPRResult) -> ANPRResult:
+    alert_count = 0
+    review_count = 0
+    for detection in result.detections:
+        effective_plate = _normalise_plate(detection.human_corrected_text or detection.plate_text)
+        matched = _vehicles.get(effective_plate)
+        detection.registry_match = _vehicle_match(matched) if matched else None
+        detection.review_required = (
+            False if detection.human_verified else (
+                detection.confidence < 0.75
+                or detection.format_score < 0.70
+                or len(effective_plate) < 8
+            )
+        )
+        if detection.review_required:
+            review_count += 1
+        if matched and matched.status == "Stolen/Missing":
+            alert_count += 1
+    result.alert_count = alert_count
+    result.review_count = review_count
+    result.progress = 100.0 if result.status == "completed" else result.progress
+    return result
+
+
+def _filter_vehicles(status: str = "", search: str = "", vehicle_type: str = "", state_code: str = "") -> list[VehicleRecord]:
+    results = list(_vehicles.values())
+    if status:
+        results = [v for v in results if v.status == status]
+    if vehicle_type:
+        results = [v for v in results if v.vehicle_type == vehicle_type]
+    if state_code:
+        code = state_code.upper().strip()
+        results = [v for v in results if v.registered_rto_code.upper().startswith(code)]
+    if search:
+        q = search.lower()
+        results = [
+            v for v in results
+            if q in v.plate_number.lower()
+            or q in v.owner_name.lower()
+            or q in v.registered_rto_state.lower()
+            or q in v.registered_rto_code.lower()
+            or q in v.vehicle_make.lower()
+            or q in v.vehicle_model.lower()
+        ]
+    return results
+
+
+def _run_video_job(job_id: str, video_path: Path) -> None:
+    try:
+        _set_job(job_id, stage="Preparing video", progress=2.0)
+        result = processor.process_video(
+            job_id,
+            video_path,
+            progress_callback=lambda progress, stage: _set_job(
+                job_id,
+                progress=round(min(progress, 99.0), 1),
+                stage=stage,
+            ),
+        )
+        result = _enrich_result(result)
+        _write_result(result)
+        _set_job(
+            job_id,
+            status="completed",
+            stage="Completed",
+            progress=100.0,
+            total_detections=result.total_detections,
+            processing_time=result.processing_time,
+            detections=result.model_dump(mode="json")["detections"],
+            output_file_url=result.output_file_url,
+            alert_count=result.alert_count,
+            review_count=result.review_count,
+        )
+    except Exception as exc:
+        error_result = ANPRResult(
+            job_id=job_id,
+            status="error",
+            input_type="video",
+            total_detections=0,
+            processing_time=0.0,
+            detections=[],
+            error=str(exc),
+            progress=100.0,
+            stage="Failed",
+        )
+        _write_result(error_result)
+        _set_job(job_id, status="error", progress=100.0, stage="Failed", error=str(exc))
 
 
 # ============================================================================
@@ -128,7 +279,8 @@ async def process_images(files: List[UploadFile] = File(...)) -> ANPRResult:
             image_paths.append(file_path)
         
         # Process images
-        result = processor.process_images(job_id, image_paths)
+        result = _enrich_result(processor.process_images(job_id, image_paths))
+        _write_result(result)
         return result
     
     except Exception as e:
@@ -144,7 +296,7 @@ async def process_images(files: List[UploadFile] = File(...)) -> ANPRResult:
 
 
 @app.post("/api/process-video")
-async def process_video(file: UploadFile = File(...)) -> ANPRResult:
+async def process_video(background_tasks: BackgroundTasks, file: UploadFile = File(...)) -> ANPRResult:
     """
     Process a video file for ANPR
     
@@ -183,9 +335,9 @@ async def process_video(file: UploadFile = File(...)) -> ANPRResult:
         with open(video_path, "wb") as f:
             f.write(contents)
         
-        # Process video
-        result = processor.process_video(job_id, video_path)
-        return result
+        _set_job(job_id, input_type="video", stage="Queued video job", progress=0.0)
+        background_tasks.add_task(_run_video_job, job_id, video_path)
+        return _job_result(job_id)
     
     except Exception as e:
         return ANPRResult(
@@ -204,16 +356,12 @@ async def get_results(job_id: str) -> ANPRResult:  # noqa: F811
     """
     Retrieve results for a completed job
     """
-    result_file = RESULTS_DIR / f"{job_id}.json"
-    
-    if not result_file.exists():
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    import json
-    with open(result_file) as f:
-        result_data = json.load(f)
-    
-    return ANPRResult(**result_data)
+    result = _read_result(job_id)
+    if result is not None:
+        return result
+    if job_id in _jobs:
+        return _job_result(job_id)
+    raise HTTPException(status_code=404, detail="Job not found")
 
 
 # ============================================================================
@@ -338,22 +486,79 @@ _seed_vehicles()
 # ============================================================================
 
 @app.get("/api/vehicles", response_model=list[VehicleRecord])
-async def list_vehicles(status: str = "", search: str = ""):
-    """List vehicles with optional status filter and text search."""
-    results = list(_vehicles.values())
-    if status:
-        results = [v for v in results if v.status == status]
-    if search:
-        q = search.lower()
-        results = [
-            v for v in results
-            if q in v.plate_number.lower()
-            or q in v.owner_name.lower()
-            or q in v.registered_rto_state.lower()
-            or q in v.vehicle_make.lower()
-            or q in v.vehicle_model.lower()
-        ]
-    return results
+async def list_vehicles(status: str = "", search: str = "", vehicle_type: str = "", state_code: str = ""):
+    """List vehicles with optional filters and text search."""
+    return _filter_vehicles(status=status, search=search, vehicle_type=vehicle_type, state_code=state_code)
+
+
+@app.get("/api/vehicles/export")
+async def export_vehicles(status: str = "", search: str = "", vehicle_type: str = "", state_code: str = ""):
+    rows = _filter_vehicles(status=status, search=search, vehicle_type=vehicle_type, state_code=state_code)
+    output = io.StringIO()
+    fields = list(VehicleRecord.model_fields.keys())
+    writer = csv.DictWriter(output, fieldnames=fields)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row.model_dump(mode="json"))
+    return Response(
+        content=output.getvalue(),
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="vehicle-registry.csv"'},
+    )
+
+
+@app.post("/api/vehicles/import", response_model=BulkImportResponse)
+async def import_vehicles(file: UploadFile = File(...)):
+    if not (file.filename or "").lower().endswith(".csv"):
+        raise HTTPException(status_code=400, detail="Please upload a CSV file")
+
+    content = (await file.read()).decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(content))
+    imported = 0
+    updated = 0
+    errors: list[str] = []
+
+    for idx, row in enumerate(reader, start=2):
+        try:
+            data = {key: (value.strip() if isinstance(value, str) else value) for key, value in row.items()}
+            payload = {
+                "plate_number": _normalise_plate(data.get("plate_number", "")),
+                "vehicle_make": data.get("vehicle_make") or "Unknown",
+                "vehicle_model": data.get("vehicle_model") or "Unknown",
+                "vehicle_year": int(data["vehicle_year"]) if data.get("vehicle_year") else None,
+                "vehicle_color": data.get("vehicle_color") or "Unknown",
+                "vehicle_type": data.get("vehicle_type") or "Other",
+                "owner_name": data.get("owner_name") or "Unknown",
+                "owner_phone": data.get("owner_phone") or None,
+                "owner_email": data.get("owner_email") or None,
+                "owner_address": data.get("owner_address") or None,
+                "registered_rto_state": data.get("registered_rto_state") or "Unknown",
+                "registered_rto_code": data.get("registered_rto_code") or "",
+                "chassis_number": data.get("chassis_number") or None,
+                "engine_number": data.get("engine_number") or None,
+                "registration_date": data.get("registration_date") or None,
+                "registration_expiry": data.get("registration_expiry") or None,
+                "insurance_expiry": data.get("insurance_expiry") or None,
+                "status": data.get("status") or "Clear",
+                "police_complaint_id": data.get("police_complaint_id") or None,
+                "missing_date": data.get("missing_date") or None,
+                "recovery_date": data.get("recovery_date") or None,
+                "created_at": data.get("created_at") or _now(),
+                "updated_at": _now(),
+            }
+            if not payload["plate_number"]:
+                raise ValueError("plate_number is required")
+            exists = payload["plate_number"] in _vehicles
+            rec = VehicleRecord(**payload)
+            _vehicles[rec.plate_number] = rec
+            if exists:
+                updated += 1
+            else:
+                imported += 1
+        except Exception as exc:
+            errors.append(f"Line {idx}: {exc}")
+
+    return BulkImportResponse(success=not errors, imported=imported, updated=updated, errors=errors)
 
 
 @app.post("/api/vehicles", response_model=ActionResponse, status_code=201)
@@ -453,6 +658,29 @@ async def mark_recovered(plate: str, payload: RecoveryRequest):
         message=f"Vehicle {plate} marked as recovered",
         vehicle=rec,
     )
+
+
+@app.put("/api/results/{job_id}/detections/{detection_index}", response_model=ANPRResult)
+async def correct_detection(job_id: str, detection_index: int, payload: DetectionCorrectionRequest):
+    result = _read_result(job_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if detection_index < 0 or detection_index >= len(result.detections):
+        raise HTTPException(status_code=404, detail="Detection not found")
+
+    detection = result.detections[detection_index]
+    detection.human_corrected_text = payload.corrected_text
+    detection.human_verified = True
+    result = _enrich_result(result)
+    _write_result(result)
+    if job_id in _jobs and _jobs[job_id].get("status") == "completed":
+        _set_job(
+            job_id,
+            detections=result.model_dump(mode="json")["detections"],
+            alert_count=result.alert_count,
+            review_count=result.review_count,
+        )
+    return result
 
 
 if __name__ == "__main__":
