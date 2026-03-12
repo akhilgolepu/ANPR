@@ -1,5 +1,6 @@
-import { Shield, Menu } from "lucide-react";
+import { Shield, Menu, Database } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const scrollTo = (id: string) => {
@@ -34,6 +35,13 @@ const Navbar = () => {
               {item.label}
             </button>
           ))}
+          <Link
+            to="/vehicles"
+            className="flex items-center gap-1.5 text-sm uppercase tracking-widest-xl text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Database className="h-3.5 w-3.5" />
+            Vehicle DB
+          </Link>
         </div>
 
         <button className="md:hidden text-foreground">

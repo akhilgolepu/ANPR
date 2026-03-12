@@ -1,0 +1,25 @@
+{
+  "job_id": "c5e389cb-625f-45f3-97ca-f0f33088eab6",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 1,
+  "processing_time": 7.9609785079956055,
+  "detections": [
+    {
+      "plate_text": "AGA06E3855",
+      "confidence": 0.8513145255980146,
+      "bbox": [
+        93,
+        250,
+        166,
+        269
+      ],
+      "vehicle_crop_url": "/static/c5e389cb-625f-45f3-97ca-f0f33088eab6_vehicle_0.jpg",
+      "plate_crop_url": "/static/c5e389cb-625f-45f3-97ca-f0f33088eab6_plate_0.jpg",
+      "raw_ocr_text": "AGA06E3855",
+      "ocr_engine": "trocr"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

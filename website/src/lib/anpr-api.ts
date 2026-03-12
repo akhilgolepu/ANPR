@@ -9,6 +9,8 @@ export interface PlateDetection {
   bbox: [number, number, number, number]; // [x1, y1, x2, y2]
   vehicle_crop_url: string;
   plate_crop_url: string;
+  raw_ocr_text?: string;  // Raw TrOCR output before cleaning
+  ocr_engine?: string;    // e.g. "trocr"
 }
 
 export interface ANPRResult {
@@ -22,8 +24,9 @@ export interface ANPRResult {
   error?: string;
 }
 
-const API_BASE = 'http://localhost:8000/api';
-export const API_HOST = 'http://localhost:8000';
+const _apiHost = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:8000';
+const API_BASE = `${_apiHost}/api`;
+export const API_HOST = _apiHost;
 
 /**
  * Resolve a relative static asset path from the backend to a full URL

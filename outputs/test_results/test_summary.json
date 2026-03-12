@@ -1,0 +1,130 @@
+{
+  "total_images": 6,
+  "total_plates": 5,
+  "avg_confidence_pct": 75.4,
+  "pipeline_time_s": 19.9,
+  "ocr_engine": "trocr-base-printed",
+  "results": [
+    {
+      "image": "IMG_01.jpeg",
+      "size": "1600x900",
+      "detect_ms": 646.7,
+      "detections": [
+        {
+          "plate_index": 1,
+          "plate_text": "TAXRM",
+          "raw_ocr_text": "TAX(RM)",
+          "confidence": 0.5523,
+          "conf_band": "LOW",
+          "bbox": [
+            1183,
+            579,
+            1296,
+            618
+          ],
+          "ocr_ms": 3650.1,
+          "crop_saved": "IMG_01_plate_1.jpg"
+        }
+      ],
+      "annotated": "IMG_01_annotated.jpg"
+    },
+    {
+      "image": "IMG_02.jpeg",
+      "size": "1600x900",
+      "detect_ms": 110.7,
+      "detections": [
+        {
+          "plate_index": 1,
+          "plate_text": "TS32T2514",
+          "raw_ocr_text": "TS32 T 2514",
+          "confidence": 0.918,
+          "conf_band": "HIGH",
+          "bbox": [
+            601,
+            760,
+            748,
+            805
+          ],
+          "ocr_ms": 3858.4,
+          "crop_saved": "IMG_02_plate_1.jpg"
+        },
+        {
+          "plate_index": 2,
+          "plate_text": "AP28AL4708",
+          "raw_ocr_text": "AP28 AL 4708",
+          "confidence": 0.9918,
+          "conf_band": "HIGH",
+          "bbox": [
+            1447,
+            721,
+            1555,
+            763
+          ],
+          "ocr_ms": 3433.0,
+          "crop_saved": "IMG_02_plate_2.jpg"
+        }
+      ],
+      "annotated": "IMG_02_annotated.jpg"
+    },
+    {
+      "image": "IMG_03.jpeg",
+      "size": "1200x1600",
+      "detect_ms": 163.5,
+      "detections": [
+        {
+          "plate_index": 1,
+          "plate_text": "ITEMPT",
+          "raw_ocr_text": "ITEMPT",
+          "confidence": 0.4565,
+          "conf_band": "LOW",
+          "bbox": [
+            488,
+            830,
+            597,
+            895
+          ],
+          "ocr_ms": 2834.1,
+          "crop_saved": "IMG_03_plate_1.jpg"
+        }
+      ],
+      "annotated": "IMG_03_annotated.jpg"
+    },
+    {
+      "image": "IMG_04.jpeg",
+      "size": "1200x1600",
+      "detect_ms": 139.1,
+      "detections": [],
+      "annotated": "IMG_04_annotated.jpg"
+    },
+    {
+      "image": "IMG_05.jpeg",
+      "size": "1200x1600",
+      "detect_ms": 212.6,
+      "detections": [],
+      "annotated": "IMG_05_annotated.jpg"
+    },
+    {
+      "image": "IMG_06.jpeg",
+      "size": "272x363",
+      "detect_ms": 127.0,
+      "detections": [
+        {
+          "plate_index": 1,
+          "plate_text": "AGA06E3855",
+          "raw_ocr_text": "AGA06E3855",
+          "confidence": 0.8513,
+          "conf_band": "HIGH",
+          "bbox": [
+            93,
+            250,
+            166,
+            269
+          ],
+          "ocr_ms": 4317.5,
+          "crop_saved": "IMG_06_plate_1.jpg"
+        }
+      ],
+      "annotated": "IMG_06_annotated.jpg"
+    }
+  ]
+}

@@ -32,13 +32,47 @@ from .postprocessing import postprocess_indian_plate
 
 _EASYOCR_READER = None
 _PADDLE_OCR = None
+_TROCR_PROCESSOR = None
+_TROCR_MODEL = None
+_TROCR_DEVICE = None
 
 
 def _gpu_available() -> bool:
     return bool(torch is not None and torch.cuda.is_available())
 
 
-def _get_easyocr_reader():
+def _get_trocr():
+    """Lazy-load and cache TrOCR processor + model."""
+    global _TROCR_PROCESSOR, _TROCR_MODEL, _TROCR_DEVICE
+    if _TROCR_PROCESSOR is None:
+        import math
+        import torch
+        from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+
+        MODEL_ID = "microsoft/trocr-base-printed"
+
+        # Use local cache if available (placed by ProcessorService at startup)
+        _TROCR_DEVICE = torch.device("cuda" if _gpu_available() else "cpu")
+
+        # Try project-local save dir first
+        try:
+            from pathlib import Path
+            _repo_root = Path(__file__).resolve().parents[2]
+            save_dir = _repo_root / "models" / "trocr"
+            if (save_dir / "config.json").exists():
+                _TROCR_PROCESSOR = TrOCRProcessor.from_pretrained(str(save_dir))
+                _TROCR_MODEL = VisionEncoderDecoderModel.from_pretrained(str(save_dir))
+            else:
+                raise FileNotFoundError
+        except Exception:
+            _TROCR_PROCESSOR = TrOCRProcessor.from_pretrained(MODEL_ID)
+            _TROCR_MODEL = VisionEncoderDecoderModel.from_pretrained(MODEL_ID)
+
+        _TROCR_MODEL.to(_TROCR_DEVICE).eval()
+    return _TROCR_PROCESSOR, _TROCR_MODEL, _TROCR_DEVICE
+
+
+
     global _EASYOCR_READER
     if _EASYOCR_READER is None:
         import easyocr
@@ -81,6 +115,79 @@ def clean_plate_text(text: str) -> str:
 
 # Import preprocessing from dedicated module
 from .preprocessing import preprocess_plate_image
+
+
+def recognize_with_trocr(image_path: Path | str | np.ndarray) -> OCRResult:
+    """
+    Recognize plate text using TrOCR (microsoft/trocr-base-printed).
+
+    Preprocessing pipeline (Phase 2):
+      1. Convert to grayscale
+      2. CLAHE contrast enhancement  (clipLimit=2.0, tileGrid=8x8)
+      3. Bilateral filter denoising  (d=11, sigmaColor=17, sigmaSpace=17)
+      4. Convert back to RGB PIL image for TrOCR
+
+    Args:
+        image_path: Path to image or numpy array (BGR)
+
+    Returns:
+        OCRResult with text, confidence, and engine="trocr"
+    """
+    import math
+    import re
+    import torch
+    from PIL import Image as PILImage
+
+    processor, model, device = _get_trocr()
+
+    # Load image
+    if isinstance(image_path, (str, Path)):
+        img = cv2.imread(str(image_path))
+        if img is None:
+            return OCRResult(text="", confidence=0.0, engine="trocr", raw_text="")
+    else:
+        img = image_path.copy()
+
+    # Phase 2 preprocessing
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) if len(img.shape) == 3 else img
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    contrast = clahe.apply(gray)
+    cleaned = cv2.bilateralFilter(contrast, 11, 17, 17)
+    pil_img = PILImage.fromarray(cleaned).convert("RGB")
+
+    pixel_values = (
+        processor(images=pil_img, return_tensors="pt")
+        .pixel_values
+        .to(device)
+    )
+
+    with torch.no_grad():
+        outputs = model.generate(
+            pixel_values,
+            num_beams=4,
+            return_dict_in_generate=True,
+            output_scores=True,
+        )
+
+    raw_text = processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0]
+    clean_text = re.sub(r"[^A-Za-z0-9]", "", raw_text).upper()
+
+    # Apply Indian plate format post-processing
+    postprocessed = postprocess_indian_plate(clean_text, strict=False)
+
+    # Confidence from beam-search sequence score
+    if getattr(outputs, "sequences_scores", None) is not None:
+        score = outputs.sequences_scores[0].item()
+        confidence = float(min(1.0, math.exp(max(-10.0, score))))
+    else:
+        confidence = 0.75
+
+    return OCRResult(
+        text=postprocessed,
+        confidence=confidence,
+        engine="trocr",
+        raw_text=raw_text,
+    )
 
 
 def recognize_with_easyocr(image_path: Path | str | np.ndarray) -> OCRResult:
@@ -277,35 +384,37 @@ def recognize_with_tesseract(image_path: Path | str | np.ndarray) -> OCRResult:
 
 def recognize_plate_text(
     image_path: Path | str | np.ndarray,
-    engine: Literal["easyocr", "paddleocr", "tesseract"] = "easyocr",
+    engine: Literal["trocr", "easyocr", "paddleocr", "tesseract"] = "trocr",
 ) -> OCRResult:
     """
     Recognize license plate text from an image.
     
     Args:
         image_path: Path to plate image or numpy array (BGR format)
-        engine: OCR engine to use ("easyocr", "paddleocr", or "tesseract")
+        engine: OCR engine to use ("trocr", "easyocr", "paddleocr", or "tesseract")
     
     Returns:
         OCRResult with recognized text, confidence, and engine used
     
     Example:
-        >>> result = recognize_plate_text("plate.jpg", engine="easyocr")
+        >>> result = recognize_plate_text("plate.jpg", engine="trocr")
         >>> print(f"Plate: {result.text}, Confidence: {result.confidence:.2f}")
     """
-    if engine == "easyocr":
+    if engine == "trocr":
+        return recognize_with_trocr(image_path)
+    elif engine == "easyocr":
         return recognize_with_easyocr(image_path)
     elif engine == "paddleocr":
         return recognize_with_paddleocr(image_path)
     elif engine == "tesseract":
         return recognize_with_tesseract(image_path)
     else:
-        raise ValueError(f"Unknown engine: {engine}. Choose from: easyocr, paddleocr, tesseract")
+        raise ValueError(f"Unknown engine: {engine}. Choose from: trocr, easyocr, paddleocr, tesseract")
 
 
 def recognize_batch(
     image_paths: list[Path | str],
-    engine: Literal["easyocr", "paddleocr", "tesseract"] = "easyocr",
+    engine: Literal["trocr", "easyocr", "paddleocr", "tesseract"] = "trocr",
     verbose: bool = True,
 ) -> list[OCRResult]:
     """

@@ -244,14 +244,25 @@ function DetectionCard({ detection, index }: DetectionCardProps) {
               <Separator />
               
               <div className="space-y-2">
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-2 flex-wrap">
                   <Badge variant={confidenceColor as any}>
                     {(detection.confidence * 100).toFixed(1)}% confidence
                   </Badge>
+                  {detection.ocr_engine && (
+                    <Badge variant="outline" className="text-xs">
+                      {detection.ocr_engine.toUpperCase()}
+                    </Badge>
+                  )}
                 </div>
-                
+
+                {detection.raw_ocr_text && detection.raw_ocr_text !== detection.plate_text && (
+                  <div className="text-xs text-muted-foreground font-mono bg-muted/50 rounded px-2 py-1">
+                    Raw: "{detection.raw_ocr_text}"
+                  </div>
+                )}
+
                 <div className="text-sm text-muted-foreground">
-                  Position: [{detection.bbox[0]}, {detection.bbox[1]}] → 
+                  Position: [{detection.bbox[0]}, {detection.bbox[1]}] →{' '}
                   [{detection.bbox[2]}, {detection.bbox[3]}]
                 </div>
               </div>

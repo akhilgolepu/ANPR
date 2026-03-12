@@ -1,0 +1,25 @@
+{
+  "job_id": "41d80880-1ad9-4c61-80be-42db7a9bdd19",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 1,
+  "processing_time": 6.346039533615112,
+  "detections": [
+    {
+      "plate_text": "TAXRM",
+      "confidence": 0.552288561085384,
+      "bbox": [
+        1183,
+        579,
+        1296,
+        618
+      ],
+      "vehicle_crop_url": "/static/41d80880-1ad9-4c61-80be-42db7a9bdd19_vehicle_0.jpg",
+      "plate_crop_url": "/static/41d80880-1ad9-4c61-80be-42db7a9bdd19_plate_0.jpg",
+      "raw_ocr_text": "TAX(RM)",
+      "ocr_engine": "trocr"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

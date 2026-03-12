@@ -1,0 +1,10 @@
+{
+  "job_id": "80fa9f5d-2f6a-4a9a-9ae7-b67f63da24f5",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 0,
+  "processing_time": 0.35950303077697754,
+  "detections": [],
+  "output_file_url": null,
+  "error": null
+}

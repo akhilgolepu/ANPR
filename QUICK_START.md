@@ -34,7 +34,7 @@ npm run dev
 |-----------|--------|----------|
 | **Backend API** | ✅ Ready | `/backend/main.py` |
 | **YOLO Detection** | ✅ 99.48% mAP | `/runs/plate_detection/` |
-| **EasyOCR Engine** | ✅ 22% accuracy | Integrated in backend |
+| **TrOCR Engine** | ✅ Active | Integrated in backend |
 | **React Frontend** | ✅ Ready | `/website/src/` |
 | **Database** | ⏸️ Optional | Use S3/local storage |
 | **Docker** | 📝 See docs | `IMPLEMENTATION_COMPLETE.md` |
@@ -51,8 +51,8 @@ npm run dev
 
 ### Process
 - 🔍 Detect license plates with YOLOv8s (99.48%)
-- 📝 Recognize plate text with EasyOCR (22%)
-- ✨ Smart postprocessing for Indian format
+- 📝 Recognize plate text with **TrOCR** (microsoft/trocr-base-printed)
+- ✨ Phase 2 preprocessing: CLAHE + bilateral denoising
 - 📊 Confidence scores & bounding boxes
 
 ### Export

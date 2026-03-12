@@ -1,0 +1,10 @@
+{
+  "job_id": "cda19dd3-96c6-4833-b249-d3fc0ce6379e",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 0,
+  "processing_time": 0.3958556652069092,
+  "detections": [],
+  "output_file_url": null,
+  "error": null
+}

@@ -95,10 +95,12 @@ See [README_PROCESS.md](README_PROCESS.md) for detailed workflow.
 - **Augmentations**: Motion blur, brightness/contrast, Gaussian noise, perspective transform
 - **Metrics**: mAP@0.5, Precision, Recall
 
-### Model 2: License Plate Recognition (CRNN) - TODO
-- **Input**: Plate crops (variable width, fixed height)
-- **Output**: Plate text (A-Z, 0-9)
-- **Loss**: CTC Loss
+### Model 2: License Plate Recognition (TrOCR)
+- **Engine**: `microsoft/trocr-base-printed` – ViT encoder + autoregressive decoder
+- **Preprocessing**: CLAHE contrast enhancement + bilateral denoising (Phase 2 pipeline)
+- **Confidence**: Derived from beam-search sequence probability
+- **Model caching**: Saved locally to `models/trocr/` after first download
+- **Output**: Plate text (A-Z, 0-9), position-corrected for Indian format
 
 ### Model 3: Vehicle Detection (Pretrained YOLO)
 - Uses COCO-pretrained YOLO
@@ -129,14 +131,16 @@ See [README_PROCESS.md](README_PROCESS.md) for detailed workflow.
 
 See `requirements.txt` for full list.
 
-## OCR Performance Metrics
+## OCR Engine
 
-**License Plate Recognition (EasyOCR)**:
-- **Exact Match Rate**: 15.87% (40/252 on validation set)
-- **Average Character Accuracy**: 51.67%
-- **Average OCR Confidence**: 35.86%
+**License Plate Recognition (TrOCR – `microsoft/trocr-base-printed`)**:
+- Transformer-based architecture: ViT image encoder + autoregressive text decoder
+- Phase 2 preprocessing: CLAHE contrast enhancement + bilateral denoising
+- Confidence derived from beam-search sequence scores (4 beams)
+- Model saved locally to `models/trocr/` after first download (no re-download on restart)
+- Indian plate format post-processing via position-aware character correction
 
-See [OCR_METRICS.md](OCR_METRICS.md) for detailed evaluation results and recommendations.
+Previous engine: EasyOCR (22% accuracy) — replaced by TrOCR for higher accuracy on printed text.
 
 ## License
 

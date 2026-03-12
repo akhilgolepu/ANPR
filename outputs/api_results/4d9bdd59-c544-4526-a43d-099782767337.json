@@ -1,0 +1,59 @@
+{
+  "job_id": "4d9bdd59-c544-4526-a43d-099782767337",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 4,
+  "processing_time": 3.081973075866699,
+  "detections": [
+    {
+      "plate_text": "F",
+      "confidence": 0.31679856204413986,
+      "bbox": [
+        3,
+        36,
+        475,
+        179
+      ],
+      "vehicle_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_vehicle_0.jpg",
+      "plate_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_plate_0.jpg"
+    },
+    {
+      "plate_text": "F",
+      "confidence": 0.523187505424578,
+      "bbox": [
+        999,
+        40,
+        1460,
+        174
+      ],
+      "vehicle_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_vehicle_1.jpg",
+      "plate_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_plate_1.jpg"
+    },
+    {
+      "plate_text": "F",
+      "confidence": 0.1728582036842364,
+      "bbox": [
+        497,
+        39,
+        966,
+        173
+      ],
+      "vehicle_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_vehicle_2.jpg",
+      "plate_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_plate_2.jpg"
+    },
+    {
+      "plate_text": "YO",
+      "confidence": 0.6598936130837199,
+      "bbox": [
+        157,
+        0,
+        328,
+        34
+      ],
+      "vehicle_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_vehicle_3.jpg",
+      "plate_crop_url": "/static/4d9bdd59-c544-4526-a43d-099782767337_plate_3.jpg"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

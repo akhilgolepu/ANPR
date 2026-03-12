@@ -1,0 +1,23 @@
+{
+  "job_id": "0418b1ec-eb59-4f8d-a786-504201b5cef7",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 1,
+  "processing_time": 0.5285189151763916,
+  "detections": [
+    {
+      "plate_text": "F",
+      "confidence": 0.7764306640700529,
+      "bbox": [
+        191,
+        234,
+        288,
+        262
+      ],
+      "vehicle_crop_url": "/static/0418b1ec-eb59-4f8d-a786-504201b5cef7_vehicle_0.jpg",
+      "plate_crop_url": "/static/0418b1ec-eb59-4f8d-a786-504201b5cef7_plate_0.jpg"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

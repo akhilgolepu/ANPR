@@ -1,0 +1,35 @@
+{
+  "job_id": "2ca67be0-10c9-4ee9-b332-a15e0846d5f0",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 2,
+  "processing_time": 0.7623600959777832,
+  "detections": [
+    {
+      "plate_text": "",
+      "confidence": 0.6643927957240812,
+      "bbox": [
+        602,
+        761,
+        746,
+        806
+      ],
+      "vehicle_crop_url": "/static/2ca67be0-10c9-4ee9-b332-a15e0846d5f0_vehicle_0.jpg",
+      "plate_crop_url": "/static/2ca67be0-10c9-4ee9-b332-a15e0846d5f0_plate_0.jpg"
+    },
+    {
+      "plate_text": "AP",
+      "confidence": 0.3914153981604664,
+      "bbox": [
+        1445,
+        723,
+        1553,
+        764
+      ],
+      "vehicle_crop_url": "/static/2ca67be0-10c9-4ee9-b332-a15e0846d5f0_vehicle_1.jpg",
+      "plate_crop_url": "/static/2ca67be0-10c9-4ee9-b332-a15e0846d5f0_plate_1.jpg"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

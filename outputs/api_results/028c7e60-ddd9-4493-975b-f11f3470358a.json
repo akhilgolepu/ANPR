@@ -1,0 +1,39 @@
+{
+  "job_id": "028c7e60-ddd9-4493-975b-f11f3470358a",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 2,
+  "processing_time": 13.353579759597778,
+  "detections": [
+    {
+      "plate_text": "TS32T2514",
+      "confidence": 0.9179898595366482,
+      "bbox": [
+        601,
+        760,
+        748,
+        805
+      ],
+      "vehicle_crop_url": "/static/028c7e60-ddd9-4493-975b-f11f3470358a_vehicle_0.jpg",
+      "plate_crop_url": "/static/028c7e60-ddd9-4493-975b-f11f3470358a_plate_0.jpg",
+      "raw_ocr_text": "TS32 T 2514",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "AP28AL4708",
+      "confidence": 0.9918079268447961,
+      "bbox": [
+        1447,
+        721,
+        1555,
+        763
+      ],
+      "vehicle_crop_url": "/static/028c7e60-ddd9-4493-975b-f11f3470358a_vehicle_1.jpg",
+      "plate_crop_url": "/static/028c7e60-ddd9-4493-975b-f11f3470358a_plate_1.jpg",
+      "raw_ocr_text": "AP28 AL 4708",
+      "ocr_engine": "trocr"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

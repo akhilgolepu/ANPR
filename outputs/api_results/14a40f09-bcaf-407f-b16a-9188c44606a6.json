@@ -1,0 +1,109 @@
+{
+  "job_id": "14a40f09-bcaf-407f-b16a-9188c44606a6",
+  "status": "completed",
+  "input_type": "video",
+  "total_detections": 7,
+  "processing_time": 113.07759380340576,
+  "detections": [
+    {
+      "plate_text": "BDB4668",
+      "confidence": 0.5776876070020852,
+      "bbox": [
+        760,
+        221,
+        832,
+        260
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_0.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_0.jpg",
+      "raw_ocr_text": "(B DB4668)",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "IBDB4668",
+      "confidence": 0.8281338005350614,
+      "bbox": [
+        771,
+        550,
+        859,
+        584
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_1.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_1.jpg",
+      "raw_ocr_text": "IB DB4668",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "BOK5EI",
+      "confidence": 0.6207163547533253,
+      "bbox": [
+        794,
+        542,
+        862,
+        575
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_2.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_2.jpg",
+      "raw_ocr_text": "B OK5EI",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "CB98E02",
+      "confidence": 0.8742438200748234,
+      "bbox": [
+        686,
+        311,
+        763,
+        340
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_3.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_3.jpg",
+      "raw_ocr_text": "CB 98E02",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "B98ED2",
+      "confidence": 0.7008822962184558,
+      "bbox": [
+        639,
+        826,
+        745,
+        864
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_4.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_4.jpg",
+      "raw_ocr_text": "@B 98ED2",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "OB452610",
+      "confidence": 0.824117275905003,
+      "bbox": [
+        25,
+        773,
+        140,
+        815
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_5.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_5.jpg",
+      "raw_ocr_text": "OB 452610",
+      "ocr_engine": "trocr"
+    },
+    {
+      "plate_text": "2",
+      "confidence": 0.770737371664777,
+      "bbox": [
+        0,
+        314,
+        255,
+        1075
+      ],
+      "vehicle_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_vehicle_6.jpg",
+      "plate_crop_url": "/static/14a40f09-bcaf-407f-b16a-9188c44606a6_plate_6.jpg",
+      "raw_ocr_text": "2",
+      "ocr_engine": "trocr"
+    }
+  ],
+  "output_file_url": "/videos/14a40f09-bcaf-407f-b16a-9188c44606a6_output.mp4",
+  "error": null
+}
