@@ -1,0 +1,35 @@
+{
+  "train": {
+    "metrics": {
+      "accuracy": 0.16334661354581673,
+      "char_accuracy": 0.5467827104281288,
+      "total_samples": 1004.0,
+      "exact_matches": 164.0,
+      "avg_ground_truth_length": 9.693227091633466,
+      "avg_predicted_length": 8.650398406374501
+    },
+    "sample_count": 1004
+  },
+  "val": {
+    "metrics": {
+      "accuracy": 0.144,
+      "char_accuracy": 0.5792888888888887,
+      "total_samples": 125.0,
+      "exact_matches": 18.0,
+      "avg_ground_truth_length": 9.696,
+      "avg_predicted_length": 8.984
+    },
+    "sample_count": 125
+  },
+  "test": {
+    "metrics": {
+      "accuracy": 0.1889763779527559,
+      "char_accuracy": 0.5715004374453192,
+      "total_samples": 127.0,
+      "exact_matches": 24.0,
+      "avg_ground_truth_length": 9.590551181102363,
+      "avg_predicted_length": 8.566929133858268
+    },
+    "sample_count": 127
+  }
+}

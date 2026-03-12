@@ -1,0 +1,17 @@
+{
+  "name": "web-fullstack",
+  "version": "1.0.0",
+  "description": "Complete ANPR web application with React frontend and FastAPI backend",
+  "scripts": {
+    "setup": "cd website && npm install",
+    "dev:frontend": "cd website && npm run dev",
+    "dev:backend": "cd website/backend && uvicorn main:app --reload --host localhost --port 8000",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "cd website && npm run build",
+    "test:frontend": "cd website && npm test",
+    "lint:frontend": "cd website && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

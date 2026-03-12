@@ -1,0 +1,50 @@
+# Dataset Preparation Configuration
+# Designed for ml_workspace env (PyTorch 2.11 + numpy 2.4)
+
+paths:
+  raw_root: "datasets/raw"
+  processed_root: "datasets/processed"
+
+  # Raw dataset sources
+  plate_sources:  # License plate detection - VOC XML (object name = plate text)
+    - dataset-1/State-wise_OLX
+    - dataset-1/video_images
+  plate_crop_sources:  # Full-image plate crops (entire image = plate, no bbox needed)
+    - dataset-3/Indian Plates/positive
+    - dataset-3/indian plates/positive
+    - dataset-3/in/in
+  vehicle_sources:  # Vehicle detection (object name = vehicle type)
+    - dataset--2
+
+outputs:
+  vehicle_detection: "datasets/processed/vehicle_detection"   # YOLO format
+  plate_detection: "datasets/processed/plate_detection"       # YOLO format
+  ocr_dataset: "datasets/processed/ocr_dataset"               # Plate crops + labels
+
+splits:
+  train: 0.80
+  val: 0.10
+  test: 0.10
+  seed: 42
+
+# Vehicle class mapping (dataset-2 → normalized classes)
+# Maps varied annotation names to YOLO class indices
+# Observed: car, bus, tempo, vehicle_truck, two_wheelers, auto, tractor, bicycle
+vehicle_classes:
+  car: 0
+  bus: 1
+  tempo: 2
+  vehicle_truck: 3
+  two_wheelers: 4
+  # Aliases (map to main classes)
+  auto: 2          # autorickshaw → tempo
+  tractor: 3       # tractor → vehicle_truck
+  bicycle: 4       # bicycle → two_wheelers
+
+plate_class: "plate"  # Single class for plate detection
+
+# Plate crop settings for OCR
+plate_crop:
+  min_width: 20   # Skip tiny crops
+  min_height: 8
+  padding_ratio: 0.1  # Add 10% padding around box

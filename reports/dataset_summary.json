@@ -1,0 +1,32 @@
+{
+  "config": "config/dataset.yaml",
+  "raw_root": "datasets/raw",
+  "outputs": {
+    "vehicle_detection": "datasets/processed/vehicle_detection",
+    "plate_detection": "datasets/processed/plate_detection",
+    "ocr_dataset": "datasets/processed/ocr_dataset"
+  },
+  "splits": {
+    "train": 0.8,
+    "val": 0.1,
+    "test": 0.1,
+    "seed": 42
+  },
+  "counts": {
+    "vehicle_detection": {
+      "train": 62,
+      "val": 7,
+      "test": 9
+    },
+    "plate_detection": {
+      "train": 3841,
+      "val": 480,
+      "test": 481
+    },
+    "ocr_dataset": {
+      "train": 1004,
+      "val": 125,
+      "test": 127
+    }
+  }
+}

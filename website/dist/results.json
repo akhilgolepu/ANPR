@@ -1,0 +1,36 @@
+[
+  {
+    "job_id": "demo-1",
+    "status": "completed",
+    "input_type": "image",
+    "total_detections": 1,
+    "processing_time": 0.048,
+    "detections": [
+      {
+        "plate_text": "EG-01-AB-1234",
+        "confidence": 0.87,
+        "bbox": [92, 250, 166, 270],
+        "vehicle_crop_url": "/static/demo1_vehicle.jpg",
+        "plate_crop_url": "/static/demo1_plate.jpg"
+      }
+    ],
+    "error": null
+  },
+  {
+    "job_id": "demo-2",
+    "status": "completed", 
+    "input_type": "image",
+    "total_detections": 1,
+    "processing_time": 0.043,
+    "detections": [
+      {
+        "plate_text": "HA-02-CD-5678",
+        "confidence": 0.92,
+        "bbox": [0, 0, 187, 45],
+        "vehicle_crop_url": "/static/demo2_vehicle.jpg",
+        "plate_crop_url": "/static/demo2_plate.jpg"
+      }
+    ],
+    "error": null
+  }
+]

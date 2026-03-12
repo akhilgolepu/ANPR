@@ -1,0 +1,1026 @@
+{
+  "accuracy": 0.2204724409448819,
+  "char_accuracy": 0,
+  "format_accuracy": 0.15748031496062992,
+  "high_confidence_correct": 0,
+  "total_correct": 28,
+  "total_samples": 127,
+  "samples": [
+    {
+      "image": "AN01L6155_56",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "AP05BY7799_111",
+      "ground_truth": "",
+      "prediction": "APD5BX2299",
+      "confidence": 0.0818779016321895,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "AP31TV6847_71",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.021357810266724956,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "AP39E1493_45",
+      "ground_truth": "",
+      "prediction": "FEAP39E{493",
+      "confidence": 0.12248467825997039,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "AS01AL3746_57",
+      "ground_truth": "",
+      "prediction": "AS01AL3746",
+      "confidence": 0.6875449154592239,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "AS23X5585_73",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "BR01AW1250_48",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "BR01AZ6290_122",
+      "ground_truth": "",
+      "prediction": "1090IZ0250",
+      "confidence": 0.06170426335974391,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "BR01DG6692_112",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "BR02AF7424_103",
+      "ground_truth": "",
+      "prediction": "KORUZUFF7724}",
+      "confidence": 0.010532723363234662,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "CG04HD6930_12",
+      "ground_truth": "",
+      "prediction": "CO04HD6930",
+      "confidence": 0.46764639905537986,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "CG22AB1111_40",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.008614755456432793,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "CH01AL4920_46",
+      "ground_truth": "",
+      "prediction": "CH014920",
+      "confidence": 0.31797261721530157,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DL1CS8739_14",
+      "ground_truth": "",
+      "prediction": "LD1AC58739",
+      "confidence": 0.08648031982086787,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DL3CCQ0107_95",
+      "ground_truth": "",
+      "prediction": "~O1JCC00N02]",
+      "confidence": 0.05324692460647507,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DL5CH7599_53",
+      "ground_truth": "",
+      "prediction": "LD15CH7599",
+      "confidence": 0.6425707657516234,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "DL6CL0457_15",
+      "ground_truth": "",
+      "prediction": "DL6CL0452",
+      "confidence": 0.14758233581486666,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DL6CR7002_62",
+      "ground_truth": "",
+      "prediction": "EL60R.7002\"",
+      "confidence": 0.11256942071863749,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DL8CN6308_55",
+      "ground_truth": "",
+      "prediction": "ID1,ICN.60T",
+      "confidence": 0.05421234338895753,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DL8CNA5085_98",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0011588127706661222,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "DL8CZ7230_94",
+      "ground_truth": "",
+      "prediction": "DL8CZ7221",
+      "confidence": 0.06897323905967521,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "DN09C0868_21",
+      "ground_truth": "",
+      "prediction": "DN09CI0968",
+      "confidence": 0.47725154251600144,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "DN09H0968_121",
+      "ground_truth": "",
+      "prediction": "PON09H0968",
+      "confidence": 0.07797430715978516,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "GA01R6315_17",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.04453017393929525,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "GJ01RA8370_125",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "GJ05JB6589_108",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "GJ15D0564_109",
+      "ground_truth": "",
+      "prediction": "6J15CD0564",
+      "confidence": 0.22456150530148097,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "HP302165_39",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "HP3SG1539_59",
+      "ground_truth": "",
+      "prediction": "(4P2B5/53",
+      "confidence": 0.04812758070090339,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "HR01W0080_29",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.024574768176647152,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "HR26CC7676_7",
+      "ground_truth": "",
+      "prediction": "HR26CC7676",
+      "confidence": 0.4586623196638173,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "HR29AS0015_123",
+      "ground_truth": "",
+      "prediction": "LHR23A50015",
+      "confidence": 0.029032452417650075,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "JH01BU9956_126",
+      "ground_truth": "",
+      "prediction": "KJ18U995",
+      "confidence": 0.013102669675617577,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "JH09AA2570_16",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "KL45C4411_99",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0016739859245717525,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH010PO323_19",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.02382497322081521,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH01AU0059_117",
+      "ground_truth": "",
+      "prediction": "HH01UO059",
+      "confidence": 0.10633205747682731,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01AU0059_119",
+      "ground_truth": "",
+      "prediction": "MH0_AV005?]",
+      "confidence": 0.03733508161735109,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01AU0059_2",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.01743231662339994,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH01BD2186_92",
+      "ground_truth": "",
+      "prediction": "FIEA0AD186",
+      "confidence": 0.026496615536150094,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01BG7161_54",
+      "ground_truth": "",
+      "prediction": "86,.7181MH01N",
+      "confidence": 0.17404574910387852,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01BT0050_86",
+      "ground_truth": "",
+      "prediction": "HR01.BT.005",
+      "confidence": 0.09259279223258494,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01BU1852_107",
+      "ground_truth": "",
+      "prediction": "RUMH.0118528U;",
+      "confidence": 0.2933044050419783,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01CR7388_6",
+      "ground_truth": "",
+      "prediction": "WH01CR72EA",
+      "confidence": 0.19269644848733733,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01DB2561_42",
+      "ground_truth": "",
+      "prediction": "0H61082561",
+      "confidence": 0.21966280360239662,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH01DT1917_65",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.11001436538002098,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH02AK5481_61",
+      "ground_truth": "",
+      "prediction": "ARERTMUNMHQ2AK5481",
+      "confidence": 0.1488594309941723,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02AQ2299_78",
+      "ground_truth": "",
+      "prediction": "'RJULKFM102AQ2299",
+      "confidence": 0.17702574941181906,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02BG9542_49",
+      "ground_truth": "",
+      "prediction": "MH02.86.9542",
+      "confidence": 0.5825431472364991,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02BQ9628_104",
+      "ground_truth": "",
+      "prediction": "II10_IQ.9625",
+      "confidence": 0.05161499637161478,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02BQ9628_23",
+      "ground_truth": "",
+      "prediction": "WI1U2.10.9625",
+      "confidence": 0.14275328336408225,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02BQ9628_33",
+      "ground_truth": "",
+      "prediction": "MI.0200J61",
+      "confidence": 0.01283531841585398,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02BT6482_47",
+      "ground_truth": "",
+      "prediction": "MH02BT6482",
+      "confidence": 0.8689928823092385,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02BT6482_52",
+      "ground_truth": "",
+      "prediction": "MH02BT6482",
+      "confidence": 0.6970282064502868,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02BT6482_64",
+      "ground_truth": "",
+      "prediction": "KE12%I6482",
+      "confidence": 0.04970109820179739,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02BT6482_80",
+      "ground_truth": "",
+      "prediction": "MH02BT6482",
+      "confidence": 0.7106370743468058,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02CD3654_102",
+      "ground_truth": "",
+      "prediction": "MH.02CD.3654",
+      "confidence": 0.1360333441588576,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02CD7733_37",
+      "ground_truth": "",
+      "prediction": "0H02C07739",
+      "confidence": 0.026899091873174734,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02CD7733_38",
+      "ground_truth": "",
+      "prediction": "002C07233",
+      "confidence": 0.08732520491826942,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02CL4017_51",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH02CR4364_63",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH02DJ8952_66",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH02DN8718_101",
+      "ground_truth": "",
+      "prediction": "INDMHO2DN8718]",
+      "confidence": 0.3246007051672891,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02DN8718_105",
+      "ground_truth": "",
+      "prediction": "MU'MHO2DN8718",
+      "confidence": 0.33284094948063886,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02DN8718_97",
+      "ground_truth": "",
+      "prediction": "INDMHO2DN8718/",
+      "confidence": 0.2351679447012477,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02DS9365_28",
+      "ground_truth": "",
+      "prediction": "NH020S9365",
+      "confidence": 0.06413809362427286,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02DS9365_9",
+      "ground_truth": "",
+      "prediction": "NH02DS9365",
+      "confidence": 0.6720192925608959,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02DW8021_22",
+      "ground_truth": "",
+      "prediction": "[H020V8021",
+      "confidence": 0.08947137836116091,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH02EE8407_20",
+      "ground_truth": "",
+      "prediction": "MH02EE0402",
+      "confidence": 0.48472919560300587,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02EE8407_24",
+      "ground_truth": "",
+      "prediction": "MH02EE8402",
+      "confidence": 0.7077783368770909,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02EE8407_34",
+      "ground_truth": "",
+      "prediction": "MH02EE8407",
+      "confidence": 0.6518295166945185,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02EK0837_116",
+      "ground_truth": "",
+      "prediction": "NH02EK0837",
+      "confidence": 0.7047648686194334,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH02EK4399_0",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.04665503718691872,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH03AM3025_60",
+      "ground_truth": "",
+      "prediction": "0H034420251",
+      "confidence": 0.0825862545778908,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH03AR7140_76",
+      "ground_truth": "",
+      "prediction": "MH03,AR,7140",
+      "confidence": 0.2645729948922029,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH03BS4060_75",
+      "ground_truth": "",
+      "prediction": "HH03BS1060",
+      "confidence": 0.5285801041796043,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH03BS4060_96",
+      "ground_truth": "",
+      "prediction": "NH03BS1060",
+      "confidence": 0.516793906939105,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH03CP1328_1",
+      "ground_truth": "",
+      "prediction": "MH.03CP1628",
+      "confidence": 0.254458426134289,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH03CS6266_68",
+      "ground_truth": "",
+      "prediction": "MH.03.C5.6266",
+      "confidence": 0.4709188136901795,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH03CS6266_83",
+      "ground_truth": "",
+      "prediction": "MH03.C5.6266",
+      "confidence": 0.43489967664220613,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH03DV2010_44",
+      "ground_truth": "",
+      "prediction": "NH03DV2010",
+      "confidence": 0.5578950508929003,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH05DK1018_91",
+      "ground_truth": "",
+      "prediction": "MH05DK1018",
+      "confidence": 0.7632160833134747,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH05DS8679_27",
+      "ground_truth": "",
+      "prediction": "HH05DS8679",
+      "confidence": 0.5874207144335776,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH05DS8679_30",
+      "ground_truth": "",
+      "prediction": "[H05DS8679",
+      "confidence": 0.3240525639529919,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH05EQ4066_74",
+      "ground_truth": "",
+      "prediction": "MH05E04066",
+      "confidence": 0.20284994163689143,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH12GR862_106",
+      "ground_truth": "",
+      "prediction": "[I12,GA.862",
+      "confidence": 0.06775942150225385,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH14DX9938_25",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.08256741367230114,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH14DX9938_35",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.1094734400510788,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "MH46BF2342_89",
+      "ground_truth": "",
+      "prediction": "MH46BF2342",
+      "confidence": 0.8538921588660291,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "MH4705851_11",
+      "ground_truth": "",
+      "prediction": "MH6705051",
+      "confidence": 0.16495355331272896,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47N2829_8",
+      "ground_truth": "",
+      "prediction": "MH.47.N2829",
+      "confidence": 0.29939528206602406,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_10",
+      "ground_truth": "",
+      "prediction": "MH42Y1124",
+      "confidence": 0.3630963032058222,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_110",
+      "ground_truth": "",
+      "prediction": "MH47Y1124",
+      "confidence": 0.5560353043555183,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_13",
+      "ground_truth": "",
+      "prediction": "MH42Y1124",
+      "confidence": 0.44915807543162833,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_3",
+      "ground_truth": "",
+      "prediction": "MH42Y1124",
+      "confidence": 0.2889799769497683,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_43",
+      "ground_truth": "",
+      "prediction": "MH42Y1124",
+      "confidence": 0.4730765034160175,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_82",
+      "ground_truth": "",
+      "prediction": "MH42Y1124",
+      "confidence": 0.2750696319381389,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MH47Y1124_87",
+      "ground_truth": "",
+      "prediction": "MH42Y1124",
+      "confidence": 0.3586906116599252,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "ML04B8918_31",
+      "ground_truth": "",
+      "prediction": "JE104PA918",
+      "confidence": 0.031157099907022485,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "ML05C5389_41",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "ML05J3288_26",
+      "ground_truth": "",
+      "prediction": "NI4053288]",
+      "confidence": 0.039618256236271056,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "ML05K9494_58",
+      "ground_truth": "",
+      "prediction": "KL05K.9494",
+      "confidence": 0.06546082556846289,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "ML064696_50",
+      "ground_truth": "",
+      "prediction": "WL064696",
+      "confidence": 0.37575166171753993,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "ML137827_85",
+      "ground_truth": "",
+      "prediction": "EI1D13,7827.",
+      "confidence": 0.05869009484361462,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "MP04CL8840_4",
+      "ground_truth": "",
+      "prediction": "EP01CL88C0",
+      "confidence": 0.028580321317745995,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "OD05K6964_70",
+      "ground_truth": "",
+      "prediction": "JOD05K6964",
+      "confidence": 0.2521015375002811,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "OR14U8730_77",
+      "ground_truth": "",
+      "prediction": "OR14U8720]",
+      "confidence": 0.11191957510613669,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "PB04S4253_113",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.10184455172433693,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "PB04T0678_90",
+      "ground_truth": "",
+      "prediction": "FRENLTE40678",
+      "confidence": 0.06224076767349199,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "PB06AN6162_67",
+      "ground_truth": "",
+      "prediction": "PB06AK6162",
+      "confidence": 0.4484627976679031,
+      "correct": false,
+      "valid_format": true
+    },
+    {
+      "image": "PB08DT7342_88",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "PB10CK5005_18",
+      "ground_truth": "",
+      "prediction": "EP870C16005_",
+      "confidence": 0.017122402101178845,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "PB37A8269_120",
+      "ground_truth": "",
+      "prediction": "PB3748269",
+      "confidence": 0.5687109187821883,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "PY02S9326_100",
+      "ground_truth": "",
+      "prediction": "LPY02$9326",
+      "confidence": 0.12909276217904553,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "PY036993_124",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.0,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "RJ14CW4115_72",
+      "ground_truth": "",
+      "prediction": "IER1ICN1N111",
+      "confidence": 0.003266455456203602,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "RJ23CB2272_84",
+      "ground_truth": "",
+      "prediction": "FRJ23082272",
+      "confidence": 0.10047951610458108,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "SK01T3794_5",
+      "ground_truth": "",
+      "prediction": "",
+      "confidence": 0.12580959407739398,
+      "correct": true,
+      "valid_format": false
+    },
+    {
+      "image": "TN19Q0835_115",
+      "ground_truth": "",
+      "prediction": "UN4990835",
+      "confidence": 0.07792964499522913,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "TN63BV7954_114",
+      "ground_truth": "",
+      "prediction": "EK6281295",
+      "confidence": 0.04078474763589097,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "TR01AS0609_36",
+      "ground_truth": "",
+      "prediction": "FR01450606",
+      "confidence": 0.05815582095842653,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "TR01N0481_93",
+      "ground_truth": "",
+      "prediction": "RD1NDLE1",
+      "confidence": 0.05836186598572503,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "UK185763_32",
+      "ground_truth": "",
+      "prediction": "EUK1B,5763,",
+      "confidence": 0.1570489048381064,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "UP70ET7816_81",
+      "ground_truth": "",
+      "prediction": "E70607016",
+      "confidence": 0.018554267602586435,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "WB06G4120_79",
+      "ground_truth": "",
+      "prediction": "EN806G4420",
+      "confidence": 0.3115805895907065,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "WB08A4101_118",
+      "ground_truth": "",
+      "prediction": "EN80844101",
+      "confidence": 0.08865476359128178,
+      "correct": false,
+      "valid_format": false
+    },
+    {
+      "image": "WB26K2760_69",
+      "ground_truth": "",
+      "prediction": "M2707750,",
+      "confidence": 0.005704880470618965,
+      "correct": false,
+      "valid_format": false
+    }
+  ]
+}

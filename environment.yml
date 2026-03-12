@@ -1,0 +1,63 @@
+name: anpr-web-dev
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # ── Python runtime ──────────────────────────────────────────
+  - python=3.11
+
+  # ── Web backend ─────────────────────────────────────────────
+  - fastapi
+  - uvicorn
+  - pydantic
+  - joblib
+  - aiofiles
+  - python-multipart
+  - httpx                # async HTTP client
+
+  # ── Computer Vision / ANPR ──────────────────────────────────
+  - opencv               # cv2
+  - pillow
+  - numpy
+  - scipy
+  - scikit-learn
+
+  # ── PyTorch (CPU build — GPU variant installed separately) ──
+  - pytorch
+  - torchvision
+  - cpuonly              # remove this line if GPU build preferred
+
+  # ── ML / detection ──────────────────────────────────────────
+  - ultralytics
+
+  # ── OCR ─────────────────────────────────────────────────────
+  - easyocr
+  - pytesseract
+  - tesseract
+
+  # ── Data & plotting ─────────────────────────────────────────
+  - pandas
+  - matplotlib
+  - seaborn
+  - pyyaml
+  - tqdm
+  - requests
+
+  # ── Frontend (React / Vite via Node.js) ─────────────────────
+  # Vite, React, TypeScript, Tailwind, Recharts, Chart.js, Axios
+  # are all npm packages — installed via `npm install` inside
+  # website/ using the package.json already present there.
+  # Node.js binary so `npm` works inside this env:
+  - nodejs>=20
+
+  # ── Dev tools ───────────────────────────────────────────────
+  - jupyter
+  - ipython
+  - black
+  - pytest
+  - pytest-asyncio
+
+  # ── pip-only packages ───────────────────────────────────────
+  - pip
+  - pip:
+    - albumentations

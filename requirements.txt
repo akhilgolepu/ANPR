@@ -1,0 +1,28 @@
+# ANPR System Requirements
+# Use with ml_workspace env - DO NOT modify PyTorch/torchvision versions
+
+# Core dependencies (from ml_workspace)
+# torch>=2.0.0
+# torchvision>=0.15.0
+# numpy>=2.0.0
+# pillow>=10.0.0
+
+# Dataset preparation
+PyYAML>=6.0
+
+# Model training
+ultralytics>=8.0.0
+albumentations>=1.3.0
+
+# Computer vision
+opencv-python>=4.10.0  # Compatible with numpy 2.4.2+
+scikit-image>=0.26.0   # Image processing (imported as skimage)
+filterpy>=1.4.0        # Kalman filtering, tracking
+lap>=0.5.0             # Linear Assignment Problem solver
+
+# OCR (License Plate Recognition)
+easyocr>=1.7.0         # Primary OCR engine (downloads models on first use)
+# Alternative OCR engines (optional):
+# paddlepaddle>=2.5.0  # For PaddleOCR (if EasyOCR has compatibility issues)
+# paddleocr>=2.7.0
+# pytesseract>=0.3.10  # Tesseract wrapper (requires system Tesseract install)

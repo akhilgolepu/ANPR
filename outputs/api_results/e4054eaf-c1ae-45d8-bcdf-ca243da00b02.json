@@ -1,0 +1,23 @@
+{
+  "job_id": "e4054eaf-c1ae-45d8-bcdf-ca243da00b02",
+  "status": "completed",
+  "input_type": "image",
+  "total_detections": 1,
+  "processing_time": 0.04860186576843262,
+  "detections": [
+    {
+      "plate_text": "EG",
+      "confidence": 0.11636675539646463,
+      "bbox": [
+        92,
+        250,
+        166,
+        270
+      ],
+      "vehicle_crop_url": "/static/e4054eaf-c1ae-45d8-bcdf-ca243da00b02_vehicle_0.jpg",
+      "plate_crop_url": "/static/e4054eaf-c1ae-45d8-bcdf-ca243da00b02_plate_0.jpg"
+    }
+  ],
+  "output_file_url": null,
+  "error": null
+}

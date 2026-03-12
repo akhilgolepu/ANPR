@@ -1,0 +1,33 @@
+# License Plate Detection - V2 Training Config
+model: yolov8s.pt
+data: datasets/processed/plate_detection/data.yaml
+
+# Training (optimized for RTX 5060 8GB with AutoBatch)
+epochs: 120
+batch: -1
+imgsz: 640
+patience: 30
+device: 0
+workers: 8
+cache: true
+seed: 42
+deterministic: true
+amp: true
+
+# Output
+project: runs
+name: plate_detection/yolov8s_640
+
+# Augmentations (per spec: motion blur, brightness/contrast, gaussian noise, perspective)
+# Built-in: hsv_v (brightness), hsv_s (contrast/saturation), perspective
+hsv_h: 0.015
+hsv_s: 0.6   # Saturation/contrast - slightly stronger
+hsv_v: 0.5   # Brightness - stronger for varying light
+degrees: 5   # Slight rotation
+translate: 0.1
+scale: 0.5
+shear: 2
+perspective: 0.0005  # Perspective transform (0-0.001)
+fliplr: 0.5
+mosaic: 1.0
+mixup: 0.1
