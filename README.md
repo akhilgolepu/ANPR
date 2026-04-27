@@ -189,7 +189,3 @@ See `requirements.txt` for full list.
 - Indian plate format post-processing via position-aware character correction
 
 Previous engine: EasyOCR (22% accuracy) — replaced by TrOCR for higher accuracy on printed text.
-
-## License
-
-[Your License Here]
